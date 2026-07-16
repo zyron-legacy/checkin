@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   X,
   CalendarCheck,
@@ -13,6 +13,7 @@ import {
   Check,
   Info,
   Sparkles,
+  ChevronDown,
   Medal,
   Award,
   Star,
@@ -44,34 +45,11 @@ const BADGES = [
   { name: '365 Day OG', icon: Crown, color: '#ffd700', unlocked: false },
 ]
 
-/* ---------- Countdown hook ---------- */
-
-function useCountdown(initial: { h: number; m: number; s: number }) {
-  const [t, setT] = useState(initial)
-  useEffect(() => {
-    const id = setInterval(() => {
-      setT((prev) => {
-        let { h, m, s } = prev
-        s -= 1
-        if (s < 0) { s = 59; m -= 1 }
-        if (m < 0) { m = 59; h -= 1 }
-        if (h < 0) { h = 23; m = 59; s = 59 }
-        return { h, m, s }
-      })
-    }, 1000)
-    return () => clearInterval(id)
-  }, [])
-  return t
-}
-
-const pad = (n: number) => String(n).padStart(2, '0')
-
 /* ---------- Page ---------- */
 
 export default function Home() {
   const [open, setOpen] = useState(true)
   const [claimed, setClaimed] = useState(false)
-  const t = useCountdown({ h: 23, m: 59, s: 12 })
 
   if (!open) {
     return (
@@ -124,29 +102,31 @@ export default function Home() {
           <X className="w-4 h-4" />
         </button>
 
-        {/* Scrollable content — on mobile, page scrolls; on desktop, card scrolls internally */}
-        <div className="relative sm:max-h-[92vh] sm:overflow-y-auto custom-scroll p-5 sm:p-7">
-          {/* Header */}
-          <header className="flex flex-col items-center text-center pt-3 pb-5">
+        {/* Content — no internal scroll, page scrolls naturally */}
+        <div className="relative p-5 sm:p-6">
+          {/* Header — compact, single row */}
+          <header className="flex items-center gap-3 pb-4">
             <div
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-3"
+              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
               style={{
                 background: 'linear-gradient(135deg, #8a2be2 0%, #6b1fb8 100%)',
-                boxShadow: '0 8px 24px rgba(138,43,226,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+                boxShadow: '0 6px 18px rgba(138,43,226,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
                 border: '1px solid rgba(168,118,255,0.5)',
               }}
             >
-              <CalendarCheck className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+              <CalendarCheck className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
-            <h1
-              className="text-white font-bold tracking-wide text-2xl sm:text-[28px] leading-tight"
-              style={{ textShadow: '0 2px 12px rgba(138,43,226,0.4)' }}
-            >
-              DAILY CHECK-IN
-            </h1>
-            <p className="text-[#b8a2ff] text-sm sm:text-[15px] mt-1 font-medium">
-              Check-in daily and earn ZP!
-            </p>
+            <div className="min-w-0">
+              <h1
+                className="text-white font-bold tracking-wide text-xl sm:text-2xl leading-tight"
+                style={{ textShadow: '0 2px 12px rgba(138,43,226,0.4)' }}
+              >
+                DAILY CHECK-IN
+              </h1>
+              <p className="text-[#b8a2ff] text-xs sm:text-sm font-medium">
+                Check-in daily and earn ZP!
+              </p>
+            </div>
           </header>
 
           {/* Wallet section */}
@@ -157,37 +137,53 @@ export default function Home() {
               border: '1px solid rgba(168,118,255,0.25)',
             }}
           >
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 shrink-0">
-                  <Wallet className="w-5 h-5 text-[#a876ff]" />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-[#4ade80] bg-[#4ade80]/10 px-2 py-0.5 rounded-full border border-[#4ade80]/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
-                      WALLET CONNECTED
-                    </span>
-                  </div>
-                  <div className="text-white font-mono text-sm mt-1 truncate">
-                    0xA4F3<span className="text-white/40">…</span>9C7B
-                  </div>
-                  <div className="text-[11px] text-[#b8a2ff] mt-0.5 flex items-center gap-1">
-                    <span className="w-3 h-3 rounded-full bg-gradient-to-br from-[#627eea] to-[#a876ff]" />
-                    Ethereum
-                  </div>
-                </div>
-              </div>
-              <button
-                className="text-xs font-semibold px-4 py-2 rounded-lg bg-[#8a2be2]/30 hover:bg-[#8a2be2]/50 text-white border border-[#a876ff]/50 transition-colors whitespace-nowrap"
-              >
-                CHANGE WALLET
-              </button>
+            {/* Status badge */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-[#4ade80] bg-[#4ade80]/10 px-2 py-0.5 rounded-full border border-[#4ade80]/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+                WALLET CONNECTED
+              </span>
             </div>
+
+            {/* Wallet row */}
+            <div className="flex items-center gap-2.5 mb-2">
+              <span className="text-base">👛</span>
+              <span className="text-[11px] tracking-wider text-[#b8a2ff] font-semibold w-16 shrink-0">
+                WALLET
+              </span>
+              <span className="text-white font-mono text-sm truncate">
+                0xA4F3<span className="text-white/40">…</span>9C7B
+              </span>
+            </div>
+
+            {/* Network row */}
+            <div className="flex items-center gap-2.5 mb-3">
+              <span className="text-base">⛓</span>
+              <span className="text-[11px] tracking-wider text-[#b8a2ff] font-semibold w-16 shrink-0">
+                NETWORK
+              </span>
+              <span className="text-white text-sm font-medium">
+                ARC L1 Mainnet
+              </span>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/10 my-3" />
+
+            {/* Network selector */}
+            <button
+              className="w-full flex items-center justify-between text-xs font-semibold px-3 py-2.5 rounded-lg bg-[#8a2be2]/20 hover:bg-[#8a2be2]/35 text-white border border-[#a876ff]/40 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-gradient-to-br from-[#627eea] to-[#a876ff]" />
+                Select Network
+              </span>
+              <ChevronDown className="w-4 h-4 text-[#a876ff]" />
+            </button>
           </section>
 
           {/* Stats grid (4 cols on desktop, 2 cols on mobile) */}
-          <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+          <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             {STATS.map((s) => {
               const Icon = s.icon
               return (
@@ -218,7 +214,7 @@ export default function Home() {
           </section>
 
           {/* Rewards (3 cols) */}
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
             {REWARDS.map((r) => {
               const Icon = r.icon
               return (
@@ -246,11 +242,51 @@ export default function Home() {
             })}
           </section>
 
+          {/* Claim status info — replaces old countdown timer */}
+          {!claimed ? (
+            <div
+              className="flex items-center justify-center gap-2 mb-3 px-3 py-2.5 rounded-lg"
+              style={{
+                background: 'rgba(74,222,128,0.06)',
+                border: '1px solid rgba(74,222,128,0.25)',
+              }}
+            >
+              <span className="text-[11px] text-[#b8a2ff] font-semibold">
+                Claim available:
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-pulse" />
+              <span className="text-[11px] text-white font-semibold">
+                Today's Reward: 8 ZP
+              </span>
+            </div>
+          ) : (
+            <div
+              className="flex flex-col items-center justify-center gap-1 mb-3 px-3 py-2.5 rounded-lg"
+              style={{
+                background: 'rgba(74,222,128,0.06)',
+                border: '1px solid rgba(74,222,128,0.25)',
+              }}
+            >
+              <div className="flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5 text-[#4ade80]" strokeWidth={3} />
+                <span className="text-[12px] text-[#4ade80] font-bold">
+                  Reward Claimed
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CalendarDays className="w-3 h-3 text-[#b8a2ff]" />
+                <span className="text-[11px] text-[#b8a2ff]">
+                  Next claim available: <span className="text-white font-semibold">Tomorrow</span>
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Claim button */}
           <button
             onClick={() => setClaimed(true)}
             disabled={claimed}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold tracking-wide text-white text-sm sm:text-base transition-all"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold tracking-wide text-white text-sm sm:text-base transition-all"
             style={{
               background: claimed
                 ? 'linear-gradient(135deg, #2a1a4a 0%, #1a0d2e 100%)'
@@ -270,24 +306,14 @@ export default function Home() {
               </>
             ) : (
               <>
-                <CalendarCheck className="w-5 h-5" />
+                <Check className="w-5 h-5" />
                 CLAIM TODAY'S REWARD
               </>
             )}
           </button>
 
-          {/* Countdown timer */}
-          <div className="flex items-center justify-center gap-1.5 mt-3 text-center">
-            <span className="text-[#b8a2ff] text-xs mr-1">Next check-in in:</span>
-            <TimeBox v={pad(t.h)} l="HRS" />
-            <span className="text-[#a876ff] font-bold">:</span>
-            <TimeBox v={pad(t.m)} l="MIN" />
-            <span className="text-[#a876ff] font-bold">:</span>
-            <TimeBox v={pad(t.s)} l="SEC" />
-          </div>
-
           {/* Badges — full width */}
-          <section className="mt-6">
+          <section className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <SectionHeader title="ACHIEVEMENT BADGES" compact />
               <button className="text-[11px] font-semibold text-[#a876ff] hover:text-white px-2.5 py-1 rounded-md bg-[#8a2be2]/20 border border-[#a876ff]/30">
@@ -337,7 +363,7 @@ export default function Home() {
           </section>
 
           {/* Footer */}
-          <footer className="mt-5 pt-4 border-t border-white/5">
+          <footer className="mt-4 pt-3 border-t border-white/5">
             <div className="flex items-start gap-2 text-[11px] text-[#b8a2ff]/70 leading-relaxed">
               <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
               <p>
@@ -349,43 +375,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Inline styles for custom scrollbar */}
-      <style jsx global>{`
-        .custom-scroll::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-          background: rgba(168, 118, 255, 0.3);
-          border-radius: 3px;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(168, 118, 255, 0.5);
-        }
-      `}</style>
-    </div>
-  )
-}
-
-/* ---------- Small components ---------- */
-
-function TimeBox({ v, l }: { v: string; l: string }) {
-  return (
-    <div className="inline-flex flex-col items-center">
-      <span
-        className="text-white font-mono font-bold text-base sm:text-lg leading-none px-1.5 py-1 rounded-md"
-        style={{
-          background: 'rgba(138,43,226,0.15)',
-          border: '1px solid rgba(168,118,255,0.3)',
-          minWidth: '34px',
-          textAlign: 'center',
-        }}
-      >
-        {v}
-      </span>
-      <span className="text-[9px] text-[#b8a2ff] tracking-wider mt-0.5">{l}</span>
     </div>
   )
 }
