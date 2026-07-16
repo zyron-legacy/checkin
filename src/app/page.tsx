@@ -66,15 +66,15 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center px-3 py-4 sm:py-6 overflow-hidden"
+      className="min-h-screen w-full flex items-start sm:items-center justify-center px-3 py-4 sm:py-6 sm:overflow-hidden"
       style={{
         background:
           'radial-gradient(circle at 30% 10%, #1a0d2e 0%, #0a0614 55%, #050208 100%)',
       }}
     >
-      {/* Popup card — wider (1100px max) so all content fits without scrolling */}
+      {/* Popup card — wider (1100px max); on desktop fits viewport, on mobile page scrolls */}
       <div
-        className="relative w-full max-w-[1100px] my-auto max-h-[calc(100vh-2rem)] overflow-hidden"
+        className="relative w-full max-w-[1100px] my-auto sm:max-h-[calc(100vh-2rem)] sm:overflow-hidden"
         style={{
           background: 'linear-gradient(180deg, #1a0d2e 0%, #120920 60%, #0a0614 100%)',
           borderRadius: '20px',
