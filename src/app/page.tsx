@@ -66,15 +66,15 @@ export default function Home() {
 
   return (
     <div
-      className="min-h-screen w-full flex items-start sm:items-center justify-center px-3 py-4 sm:py-6 sm:overflow-hidden"
+      className="min-h-screen w-full flex items-start sm:items-center justify-center px-3 py-4 sm:py-6"
       style={{
         background:
           'radial-gradient(circle at 30% 10%, #1a0d2e 0%, #0a0614 55%, #050208 100%)',
       }}
     >
-      {/* Popup card — wider (1100px max); on desktop fits viewport, on mobile page scrolls */}
+      {/* Popup card — wider (1100px max). Mobile scrolls the page, desktop fits without scroll. */}
       <div
-        className="relative w-full max-w-[1100px] my-auto sm:max-h-[calc(100vh-2rem)] sm:overflow-hidden"
+        className="relative w-full max-w-[1100px] my-auto"
         style={{
           background: 'linear-gradient(180deg, #1a0d2e 0%, #120920 60%, #0a0614 100%)',
           borderRadius: '20px',
@@ -82,7 +82,7 @@ export default function Home() {
           boxShadow:
             '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(168,118,255,0.08), inset 0 0 40px rgba(138,43,226,0.06)',
         }}
->
+      >
         {/* Glow accent */}
         <div
           aria-hidden
