@@ -12,7 +12,6 @@ import {
   Gift,
   Check,
   Info,
-  ChevronRight,
   Sparkles,
   Medal,
   Award,
@@ -34,24 +33,6 @@ const REWARDS = [
   { header: "TODAY'S REWARD", amount: '8', unit: 'ZP', desc: 'Day 14 of your streak', icon: Coins, accent: '#a876ff' },
   { header: 'NEXT REWARD', amount: '9', unit: 'ZP', desc: 'Tomorrow (Day 15)', icon: Coins, accent: '#ffd700' },
   { header: 'NEXT BONUS', amount: '30', unit: 'ZP', desc: 'Day 14 Bonus · Keep going!', icon: Gift, accent: '#ff7a3d' },
-]
-
-const JOURNEY = [
-  { day: 'Day 10', reward: '10 ZP', state: 'claimed' },
-  { day: 'Day 11', reward: '11 ZP', state: 'claimed' },
-  { day: 'Day 12', reward: '12 ZP', state: 'claimed' },
-  { day: 'Day 13', reward: '13 ZP', state: 'claimed' },
-  { day: 'Day 14', reward: '8 ZP', state: 'today' },
-  { day: 'Day 15', reward: '9 ZP', state: 'next' },
-  { day: 'Day 16', reward: '16 ZP', state: 'future' },
-  { day: 'Day 17', reward: '17 ZP', state: 'future' },
-  { day: 'Day 21', reward: '60 ZP', state: 'bonus' },
-]
-
-const HISTORY = [
-  { date: 'May 18, 2025', time: '9:41 AM', day: 'Day 13', reward: '+13 ZP' },
-  { date: 'May 17, 2025', time: '9:32 AM', day: 'Day 12', reward: '+12 ZP' },
-  { date: 'May 16, 2025', time: '9:28 AM', day: 'Day 11', reward: '+11 ZP' },
 ]
 
 const BADGES = [
@@ -305,131 +286,53 @@ export default function Home() {
             <TimeBox v={pad(t.s)} l="SEC" />
           </div>
 
-          {/* Journey section */}
+          {/* Badges — full width */}
           <section className="mt-6">
-            <SectionHeader title="YOUR CHECK-IN JOURNEY" />
+            <div className="flex items-center justify-between mb-2">
+              <SectionHeader title="ACHIEVEMENT BADGES" compact />
+              <button className="text-[11px] font-semibold text-[#a876ff] hover:text-white px-2.5 py-1 rounded-md bg-[#8a2be2]/20 border border-[#a876ff]/30">
+                VIEW ALL
+              </button>
+            </div>
             <div
-              className="rounded-2xl p-4 sm:p-5"
+              className="rounded-2xl p-3 grid grid-cols-3 sm:grid-cols-6 gap-2"
               style={{
                 background: 'rgba(255,255,255,0.02)',
                 border: '1px solid rgba(168,118,255,0.18)',
               }}
             >
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-2.5">
-                {JOURNEY.map((j) => (
-                  <JourneyCell key={j.day} {...j} />
-                ))}
-              </div>
-
-              {/* Warning */}
-              <div
-                className="mt-4 flex items-start gap-2 rounded-lg p-3"
-                style={{
-                  background: 'rgba(255,165,0,0.06)',
-                  border: '1px solid rgba(255,165,0,0.25)',
-                }}
-              >
-                <Info className="w-4 h-4 text-[#ffb84d] shrink-0 mt-0.5" />
-                <p className="text-[12px] text-[#ffd9a8] leading-relaxed">
-                  Miss a day and your streak will restart from{' '}
-                  <span className="font-semibold text-white">Day 1</span>.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* History + Badges */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-            {/* History */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <SectionHeader title="RECENT CLAIM HISTORY" compact />
-                <button className="text-[11px] font-semibold text-[#a876ff] hover:text-white px-2.5 py-1 rounded-md bg-[#8a2be2]/20 border border-[#a876ff]/30">
-                  VIEW ALL
-                </button>
-              </div>
-              <div
-                className="rounded-2xl p-3 space-y-2"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(168,118,255,0.18)',
-                }}
-              >
-                {HISTORY.map((h, i) => (
+              {BADGES.map((b) => {
+                const Icon = b.icon
+                return (
                   <div
-                    key={i}
-                    className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-white/3"
+                    key={b.name}
+                    className="flex flex-col items-center text-center p-2 rounded-lg"
+                    style={{
+                      background: b.unlocked ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.01)',
+                      border: `1px solid ${b.unlocked ? `${b.color}55` : 'rgba(255,255,255,0.05)'}`,
+                      opacity: b.unlocked ? 1 : 0.4,
+                    }}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#8a2be2]/15 border border-[#a876ff]/20">
-                        <CalendarCheck className="w-4 h-4 text-[#a876ff]" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-white text-[13px] font-semibold truncate">
-                          {h.date} · {h.time}
-                        </div>
-                        <div className="text-[11px] text-[#b8a2ff]">{h.day}</div>
-                      </div>
-                    </div>
-                    <span className="text-[#ffd700] font-bold text-sm whitespace-nowrap">
-                      {h.reward}
-                    </span>
-                  </div>
-                ))}
-                <p className="text-[10px] text-[#b8a2ff]/60 text-center pt-1">
-                  All times are based on server time (UTC)
-                </p>
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <SectionHeader title="ACHIEVEMENT BADGES" compact />
-                <button className="text-[11px] font-semibold text-[#a876ff] hover:text-white px-2.5 py-1 rounded-md bg-[#8a2be2]/20 border border-[#a876ff]/30">
-                  VIEW ALL
-                </button>
-              </div>
-              <div
-                className="rounded-2xl p-3 grid grid-cols-3 gap-2"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(168,118,255,0.18)',
-                }}
-              >
-                {BADGES.map((b) => {
-                  const Icon = b.icon
-                  return (
                     <div
-                      key={b.name}
-                      className="flex flex-col items-center text-center p-2 rounded-lg"
+                      className="w-9 h-9 rounded-full flex items-center justify-center mb-1.5"
                       style={{
-                        background: b.unlocked ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.01)',
-                        border: `1px solid ${b.unlocked ? `${b.color}55` : 'rgba(255,255,255,0.05)'}`,
-                        opacity: b.unlocked ? 1 : 0.4,
+                        background: b.unlocked
+                          ? `radial-gradient(circle, ${b.color}33 0%, transparent 70%)`
+                          : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${b.unlocked ? `${b.color}88` : 'rgba(255,255,255,0.06)'}`,
                       }}
                     >
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center mb-1.5"
-                        style={{
-                          background: b.unlocked
-                            ? `radial-gradient(circle, ${b.color}33 0%, transparent 70%)`
-                            : 'rgba(255,255,255,0.03)',
-                          border: `1px solid ${b.unlocked ? `${b.color}88` : 'rgba(255,255,255,0.06)'}`,
-                        }}
-                      >
-                        <Icon
-                          className="w-4 h-4"
-                          style={{ color: b.unlocked ? b.color : '#666' }}
-                        />
-                      </div>
-                      <span className="text-[10px] text-white/80 leading-tight font-medium">
-                        {b.name}
-                      </span>
+                      <Icon
+                        className="w-4 h-4"
+                        style={{ color: b.unlocked ? b.color : '#666' }}
+                      />
                     </div>
-                  )
-                })}
-              </div>
+                    <span className="text-[10px] text-white/80 leading-tight font-medium">
+                      {b.name}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </section>
 
@@ -504,107 +407,4 @@ function SectionHeader({
   )
 }
 
-function JourneyCell({
-  day,
-  reward,
-  state,
-}: {
-  day: string
-  reward: string
-  state: 'claimed' | 'today' | 'next' | 'future' | 'bonus'
-}) {
-  const styles: Record<
-    typeof state,
-    { bg: string; border: string; glow?: string; textColor: string; pill?: string; pillText?: string }
-  > = {
-    claimed: {
-      bg: 'rgba(74,222,128,0.08)',
-      border: 'rgba(74,222,128,0.35)',
-      textColor: '#4ade80',
-      pill: 'rgba(74,222,128,0.18)',
-      pillText: '#4ade80',
-    },
-    today: {
-      bg: 'rgba(138,43,226,0.18)',
-      border: 'rgba(168,118,255,0.7)',
-      glow: '0 0 20px rgba(138,43,226,0.5)',
-      textColor: '#ffffff',
-      pill: '#8a2be2',
-      pillText: '#ffffff',
-    },
-    next: {
-      bg: 'rgba(255,215,0,0.06)',
-      border: 'rgba(255,215,0,0.35)',
-      textColor: '#ffd700',
-      pill: 'rgba(255,215,0,0.15)',
-      pillText: '#ffd700',
-    },
-    future: {
-      bg: 'rgba(255,255,255,0.02)',
-      border: 'rgba(255,255,255,0.08)',
-      textColor: '#888',
-    },
-    bonus: {
-      bg: 'rgba(255,122,61,0.10)',
-      border: 'rgba(255,122,61,0.5)',
-      glow: '0 0 16px rgba(255,122,61,0.3)',
-      textColor: '#ff7a3d',
-      pill: 'rgba(255,122,61,0.2)',
-      pillText: '#ff7a3d',
-    },
-  }
-  const s = styles[state]
-  const isToday = state === 'today'
-  const isBonus = state === 'bonus'
 
-  return (
-    <div
-      className="rounded-xl p-2.5 flex flex-col items-center text-center relative"
-      style={{
-        background: s.bg,
-        border: `1px solid ${s.border}`,
-        boxShadow: s.glow,
-      }}
-    >
-      {/* Status pill */}
-      {state === 'claimed' && (
-        <div className="absolute top-1.5 right-1.5">
-          <div className="w-4 h-4 rounded-full bg-[#4ade80] flex items-center justify-center">
-            <Check className="w-2.5 h-2.5 text-[#0a0614]" strokeWidth={4} />
-          </div>
-        </div>
-      )}
-      {isToday && (
-        <span
-          className="absolute -top-2 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-full whitespace-nowrap"
-          style={{ background: s.pill, color: s.pillText }}
-        >
-          TODAY
-        </span>
-      )}
-      {isBonus && (
-        <span
-          className="absolute -top-2 left-1/2 -translate-x-1/2 text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded-full whitespace-nowrap"
-          style={{ background: s.pill, color: s.pillText }}
-        >
-          BONUS
-        </span>
-      )}
-
-      <span
-        className={`text-[12px] font-bold ${isToday ? 'animate-pulse' : ''}`}
-        style={{ color: s.textColor }}
-      >
-        {day}
-      </span>
-      <span
-        className="text-[11px] font-semibold mt-0.5"
-        style={{
-          color: state === 'future' ? '#666' : isToday ? '#ffffff' : s.textColor,
-        }}
-      >
-        {reward}
-      </span>
-    </div>
-  )
-}
