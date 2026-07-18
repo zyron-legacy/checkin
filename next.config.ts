@@ -1,9 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: false,
-  experimental: {
-    allowedDevOrigins: ['10.203.206.219', 'localhost:3000']
-  }
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "standalone",
 };
 
 export default nextConfig;
